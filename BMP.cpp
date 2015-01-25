@@ -6,6 +6,7 @@
 */
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 #include "MandelbrotGenerator.h"
 
@@ -69,7 +70,13 @@ BMP fileSize (unsigned int rowSize, BMP bmp)
 // 			but I like the blue for the set more than the red that it would be if we corrected for it
 //			so I'm leaving it alone.
 */
-void writeBMP(char *buffer, ofstream &bmpPtr, unsigned int bufferLength)
+void writeBMP(vector<vector<char>> &buffer, ofstream &bmpPtr, unsigned int bufferLength, unsigned int pixelCount)
 {
-	bmpPtr.write(buffer, bufferLength);
+	for (unsigned int j = 0; j < pixelCount; ++j)
+	{
+		for (unsigned int i = 0; i < bufferLength; ++i)
+		{
+			bmpPtr.write(&buffer.at(j).at(i), 1);
+		}
+	}
 }

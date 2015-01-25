@@ -4,11 +4,13 @@
 //		Definitions of functions and objects used throughout execution
 //		are contained in this file.
 */
+#ifndef MANDELBROTGENERATOR_H
+#define MANDELBROTGENERATOR_H
 
 #include <fstream>
+#include <vector>
 
 using namespace std;
-
 
 #pragma pack(push, 1)	/* Pushes the current packing alignment value on the internal compiler stack, and sets the current packing alignment value to 1*/
 						/* This is necessary for how we will access the header information */
@@ -44,13 +46,14 @@ struct BMP
 
 #pragma pack(pop)							/* Removes the record from the top of the internal compiler stack */
 
-
 /* Function Prototypes */
 unsigned int 		getBufferLength (unsigned int xRes, BMP bmp);
 BMP					setDimensions (unsigned int xRes, unsigned int yRes, BMP bmp);
 BMP 				fileSize (unsigned int rowSize, BMP bmp);
-void				normalize (unsigned int *data, bool *escape, unsigned int length, unsigned int iterations);
-void				hueToRGB (char *colorData, unsigned int *hue, bool *escape, unsigned int pixelCount, unsigned int bufferLength);
-void 				writeBMP (char *buffer, ofstream &bmpPtr, unsigned int bufferLength);
+void				normalize (vector<vector<unsigned int>> &data, vector<vector<bool>> &escape, unsigned int length, unsigned int iterations);
+void				hsvToRGB (vector<vector<char>> &colorData, vector<vector<unsigned int>> &hue, vector<vector<bool>> &escape, unsigned int pixelCount);
+void 				writeBMP (vector<vector<char>> &buffer, ofstream &bmpPtr, unsigned int bufferLength, unsigned int pixelCount);
 string 				fileSizeToString(unsigned int size);
+
+#endif //MANDELBROTGENERATOR_H
 

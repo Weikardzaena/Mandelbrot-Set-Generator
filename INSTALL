@@ -1,0 +1,6 @@
+This is a standalone application that does not use anything platform-specific,
+so the compiled executables should just run on any machine.  As for building the
+code, you can use any c++0x compatible compiler to build the executable.
+
+The .exe is for Windows and the MandelbrotGenerator with no extension is the
+executable for Unix-based machines.

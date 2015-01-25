@@ -1,0 +1,13 @@
+This is a command-line interactive application that generates the Mandelbrot Set
+at user-specified locations in the complex plane at a given zoom level.  It's
+fairly simple in it's execution, and I plan to make this into a GUI similar to
+Fractal eXtreme (http://www.cygnus-software.com/).  The output is a raw bitmap
+that is named according to the choice of coordinates.
+
+Currently there is a Linux build (using G++ compiler with c++0x libraries) and a
+Windows .exe included in this repo.  I don't really plan on going any further
+with this project as all my time will be going towards making this into a GUI
+rather than a command line interface.  So that's why I've included the executables.
+
+Since this project doesn't use any platform-specific libraries (other than
+c++0x) almost any C++ compiler will do for compiling this application.

@@ -1,2 +1,6 @@
 *.bmp
 *.bin
+*.ini
+*.swp
+*.gch
+MandelbrotGenerator

@@ -1,2 +1,6 @@
 This is a standalone application that does not use anything platform-specific,
 so you can use any c++0x compatible compiler to build the executable.
+
+For example:
+
+g++ -std=c++0x main.cpp BMP.cpp RGB.cpp MandelbrotGenerator.h -o MandelbrotGenerator

@@ -1,4 +1,4 @@
-/*
+/**
  * Weikarczaena's Mandelbrot Set Generator BMP.cpp file.
  *
  * All methods, structs, etc, for dealing with
@@ -40,9 +40,8 @@ unsigned int getBufferLength (unsigned int pixelCount, BMP bmp)
 {
 	/* This calculates the least number of pixels needed to have an integer
 	 * multiple of 4 bytes per row. */
-	unsigned int rowSize = (unsigned int)floor((float)(bmp.BITMAPFILEINFO.biColorDepth *
-				bmp.BITMAPFILEINFO.biWidth + 31) / 32) * 4;
-	
+	unsigned int rowSize = (unsigned int)floor((float)(bmp.BITMAPFILEINFO.biColorDepth * bmp.BITMAPFILEINFO.biWidth + 31) / 32) * 4;
+
 	return rowSize;
 }
 
@@ -64,17 +63,17 @@ BMP fileSize (unsigned int rowSize, BMP bmp)
 	/* Overload this because of how big biHeight can be */
 	bmp.BITMAPFILEINFO.biImageSize = rowSize * abs((long long)bmp.BITMAPFILEINFO.biHeight);
 	bmp.BITMAPFILEHEADER.bfFileSize = sizeof(bmp) + bmp.BITMAPFILEINFO.biImageSize;
-		
+
 	return bmp;
 }
 
-/* WRITE BUFFER TO BMP
+/**
+ * WRITES BUFFER TO BMP
  * NOTE: BMP file types read pixels as BGR not RGB, so we are flipping the color
  * scheme here, but I like the blue for the set more than the red that it would
  * be if we corrected for it so I'm leaving it alone.
  */
-void writeBMP(vector<vector<char>> &buffer, ofstream &bmpPtr, unsigned int bufferLength,
-		unsigned int pixelCount)
+void writeBMP(vector<vector<char>> &buffer, ofstream &bmpPtr, unsigned int bufferLength, unsigned int pixelCount)
 {
 	for (unsigned int j = 0; j < pixelCount; ++j) {
 		for (unsigned int i = 0; i < bufferLength; ++i) {

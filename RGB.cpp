@@ -1,9 +1,8 @@
-/*
-//	Weikardzaena's Mandelbrot Set Generator RGB.cpp file.
-//
-//		All the functions for dealing with RGB calculations
-//		and conversions are contained in this file.
-*/
+/**
+ * Weikardzaena's Mandelbrot Set Generator RGB.cpp file.
+ * 
+ * All the functions for dealing with RGB calculations
+ * and conversions are contained in this file.*/
 
 #include <cmath>
 #include <vector>
@@ -13,8 +12,7 @@ using namespace std;
 
 /* FUNCTION FOR NORMALIZING COLOR VALUES TO 0-360 */
 
-void normalize(vector<vector<unsigned int>> &data, vector<vector<bool>> &escape,
-		unsigned int length, unsigned int iterations)
+void normalize(vector<vector<unsigned int>> &data, vector<vector<bool>> &escape, unsigned int length, unsigned int iterations)
 {
 	for (unsigned int j = 0; j < length; ++j) {
 		for (unsigned int i = 0; i < length; ++i) {
@@ -26,7 +24,8 @@ void normalize(vector<vector<unsigned int>> &data, vector<vector<bool>> &escape,
 	}
 }
 
-/* CONVERT HSV TO RGB
+/**
+ * CONVERTS HSV TO RGB
  *
  * This algorithm takes in the number of iterations it took to escape and
  * interprets it as a hue in HSV space converting it to the corresponding RGB
@@ -35,8 +34,7 @@ void normalize(vector<vector<unsigned int>> &data, vector<vector<bool>> &escape,
  * See <http://en.wikipedia.org/wiki/HSL_and_HSV#Converting_to_RGB> for an
  * explanation of the algorithm. */
 
-void hsvToRGB(vector<vector<char>> &colorData, vector<vector<unsigned int>> &hue,
-		vector<vector<bool>> &escape, unsigned int pixelCount)
+void hsvToRGB(vector<vector<char>> &colorData, vector<vector<unsigned int>> &hue, vector<vector<bool>> &escape, unsigned int pixelCount)
 {
 	const float V = 1;
 	float hueP, X, S, C;
@@ -44,7 +42,8 @@ void hsvToRGB(vector<vector<char>> &colorData, vector<vector<unsigned int>> &hue
 	for (unsigned int j = 0; j < pixelCount; ++j) {
 		for (unsigned int i = 0; i < pixelCount; ++i) {
 
-			/* This escape flag is needed because sometimes the RGB
+			/**
+			 * This escape flag is needed because sometimes the RGB
 			 * conversion spits out 0, so we can't rely on purely
 			 * that hue value to determine if the point is in the
 			 * set or not */

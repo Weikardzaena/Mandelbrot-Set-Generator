@@ -3,4 +3,10 @@
 *.ini
 *.swp
 *.gch
-MandelbrotGenerator
+*.exe
+*.sln
+*.suo
+*.sdf
+*.vcxproj*
+*.opensdf
+Debug/

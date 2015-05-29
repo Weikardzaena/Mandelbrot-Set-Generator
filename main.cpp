@@ -1,6 +1,7 @@
 /*******************************************************************************
 
-	Copyright (C) 2014 by G. Nikolai Kotula <limitatinfinity11@gmail.com>
+	Copyright (C) 2015 by G. Nikolai "Weikardzaena" Kotula
+		<limitatinfinity11@gmail.com>
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -17,7 +18,8 @@
 
 *******************************************************************************/
 
-/* TODO (for current version):
+/**
+ * TODO (for current version):
  *
  *	There's a small improvement that can be made concerning
  *	the user input. Right now it just counts any string of
@@ -48,8 +50,10 @@
  *	Multithreading the calculation loop would be awesome.
  */
 
-/* There's a silly error about fopen not being safe or something when compiling
- * on windows, so we need this to tell the compiler to ignore it. */
+/**
+ * There's a silly error about fopen not being safe or something when compiling
+ * on windows, so we need this to tell the compiler to ignore it. 
+ */
 #ifdef	_MSC_VER
 #define	_CRT_SECURE_NO_WARNINGS
 #endif
@@ -64,6 +68,9 @@
 
 using namespace std;
 
+/**
+ * Grabs a line from the language file
+ */
 void getStringFromFile()
 {
 	ifstream file;
@@ -80,19 +87,26 @@ void getStringFromFile()
 }
 
 /**
- \n* Searches string for any non-digit characters, and returns false if there are
- * non-digit characters */
+ * Searches string for any non-digit characters, and returns false if there are
+ * non-digit characters 
+ */
 bool isNumber (string str)
 {
 	return str.find_first_not_of("0123456789") == string::npos;
 }
 
+/**
+ * Searches string for any non-float characters, and returns false if there are
+ * non-float characters 
+ */
 bool isFloat (string str)
 {
 	return str.find_first_not_of("0123456789.-") == string::npos;
 }
 
-/* Application Entry Point */
+/**
+ * Application Entry Point
+ */
 int main(int argc, char *argv[])
 {
 	/* Forward Definitions of Variables */
@@ -106,53 +120,54 @@ int main(int argc, char *argv[])
 	const string decWarning     = "Oops, you can't include any non-number \
                                        characters (remember, no commas or \
                                        anything). Try again.";
-	const string rangeWarning = "Sorry, that number was out of the range.\
-                                     Try again.";
+	const string rangeWarning   = "Sorry, that number was out of the range.\
+                                       Try again.";
 
-	bool outOfBounds;
+	bool outOfBounds; /*!< Tells if the sum escaped or not */
 	bool repeat = true;
 	bool proceed;
 
-	string size;
+	/* string size; do we need this?? */
 	string userInput;
 	string fileName;
 
-	unsigned int i;
-	unsigned int j;
-	unsigned int k;
-	unsigned int pixelCount = 1200;
-	unsigned int bufferLength;
-	unsigned int count;
-	unsigned int percent;
-	unsigned int iterations;
-	unsigned int usignInput [] = {0};
+	unsigned int i; /*!< Iteration integer declaration */
+	unsigned int j; /*!< Iteration integer declaration */
+	unsigned int k; /*!< Iteration integer declaration */
+	unsigned int pixelCount = 1200; /*!< Number of pixels in both the x and y directions */
+	unsigned int bufferLength; /*!< How long the array of calculated data must be */
+	/* unsigned int count; do we need this?? */
+	unsigned int percent; /*!< The value that is displayed telling the user the progress of the render */
+	unsigned int iterations; /*!< Number of iterations before escape for each pixel */
+	unsigned int usignInput [] = {0}; /*!< If the previous user input file doesn't exist, use this to create a new one. */
 
-	double Z;
-	double Zi;
-	double Zp;
-	double Zip;
-	double xStep;
-	double yStep;
-	double xCent;
-	double yCent;
-	double xPos;
-	double yPos;
-	double xStart;
-	double xEnd;
-	double yStart;
-	double yEnd;
-	double radius;
-	double floatInput [] = {0, 0, 0};
+	double Z; /*!< Real part of the complex argument */
+	double Zi; /*!< Imaginary part of the complex argument */
+	double Zp; /*!< Temporary variable for the real part of Z*Z */
+	double Zip; /*!< Temporary variable for the imaginary part of Z*Z */
+	double xStep; /*!< Width of each horizontal pixel in the complex plane */
+	double yStep; /*!< Height of each vertical pixel in the complex plane */
+	double xCent; /*!< X center coordinate for the image in the complex plane */
+	double yCent; /*!< Y center coordinate for the image in the complex plane */
+	double xPos; /*!< Horizontal position of current pixel being calculated */
+	double yPos; /*!< Vertical position of current pixel being calculated */
+	double xStart; /*!< Starting horizontal complex coordinate */
+	double xEnd; /*!< Ending horizontal complex coordinate */
+	double yStart; /*!< Starting vertical complex coordinate */
+	double yEnd; /*!< Ending vertical complex coordinate */
+	double radius; /*!< distance from center point to edge of image (aka zoom level) */
+	double floatInput [] = {0, 0, 0}; /*!< Array that will contain previous user input */
 
 	BMP bitmapData;	// Constructor is called from BMP.cpp
 
 	getStringFromFile();
 
-	ofstream	dataFile;
-	FILE		*prevInputFile;
+	ofstream	dataFile; /*!< The output stream to the bitmap file */
+	FILE		*prevInputFile; /*!< Input stream to the data file containing the user's previous input */
 	
 	/**
-	 * Checks to make sure the data file exists */
+	 * Checks to make sure the data file exists
+	 */
 	prevInputFile = fopen ("UserInput.bin", "r");
 	
 	if (prevInputFile == NULL) {
@@ -174,20 +189,25 @@ int main(int argc, char *argv[])
 	rewind(prevInputFile);
 			
 	/**
-	 * Sets the image dimensions */
+	 * Sets the image dimensions
+	 */
 	bitmapData = setDimensions(pixelCount, pixelCount, bitmapData);
 
 	/**
 	 * Gets the length of the buffer so the data is padded to integer
-	 * multiples of 4 bytes (which is necessary for .BMP)*/
+	 * multiples of 4 bytes (which is necessary for .BMP)
+	 */
 	bufferLength = getBufferLength(pixelCount, bitmapData);
 
-	/* Set File and Image Sizes in bitmap struct */
+	/** 
+	 * Set File and Image Sizes in bitmap struct
+	 */
 	bitmapData = fileSize(bufferLength, bitmapData);
 	
 	/**
 	 * Initializes buffers with all zeroes.  This ensures the padded bytes are
-	 * defined in the file*/
+	 * defined in the file
+	 */
 	vector<vector<bool>> escapeBuffer (pixelCount, vector<bool>(pixelCount, false));
 	vector<vector<char>> colorBuffer (pixelCount, vector<char>(bufferLength, 0x0));
 	vector<vector<unsigned int>> iterationBuffer (pixelCount,
@@ -252,7 +272,8 @@ int main(int argc, char *argv[])
 "Have fun with it! Press ctrl-c at any time to quit.\n\n", currentVersion.c_str());
 
 	/**
-	 * The main loop for user interaction*/
+	 * The main loop for user interaction
+	 */
 	while (repeat) {
 		repeat = false;
 		proceed = false;
@@ -260,6 +281,10 @@ int main(int argc, char *argv[])
 		printf ("\nLast values:\n\nReal = %f, Imaginary = %f, Radius = %f,\n"
 			"Iterations = %u\n", xCent, yCent, radius, iterations);
 		
+		/**
+		 * These initial values are to ensure that the while loops controlling
+		 * user input are actually jumped into initially
+		 */
 		xCent = 3;
 		yCent = 3;
 		radius = 3;
@@ -317,7 +342,7 @@ int main(int argc, char *argv[])
 					if (stof(userInput) < 2 && stof(userInput) > -2) {
 						yCent = stof(userInput);
 /* Only write this to the file once the user has submitted the next one which
- * make sure they want to keep the last value they entered */
+   make sure they want to keep the last value they entered */
 						fwrite(&xCent, sizeof(double), 1,
 								prevInputFile);
 					} else {
@@ -426,7 +451,9 @@ int main(int argc, char *argv[])
 
 		printf("Now executing calculations...\n\n");
 
-		/* Write the file header */
+		/**
+		 * Write the bitmap header
+		 */
 		dataFile.seekp(ios_base::beg);
 		dataFile.write(reinterpret_cast <char*>(&bitmapData), sizeof(bitmapData));
 
@@ -434,7 +461,9 @@ int main(int argc, char *argv[])
 		xStep = (double)(xEnd - xStart)/pixelCount;
 		yStep = (double)(yEnd - yStart)/pixelCount;
 
-		/* Main calculation loop */
+		/**
+		 * Main calculation loop
+		 */
 		for (j = 0; j < pixelCount; ++j) {
 			percent = int(fabs(yPos-yStart)/(yEnd - yStart) * 100);
 			printf("\r%d%%",percent);
@@ -448,7 +477,13 @@ int main(int argc, char *argv[])
 				outOfBounds = true;
 			
 				while (k < iterations) {
-/* This needs to be first because sometimes the sum escapes on the first iteration */
+					/**
+					 * The ++k needs to be first because sometimes 
+					 * the sum escapes on the first iteration,
+					 * and we don't want k to be zero if it
+					 * escapes because that's how we tell if
+					 * the pixel is a member of the set.
+					 */
 					++k;
 				
 					Zp = Z*Z - Zi*Zi + xPos;
@@ -477,10 +512,14 @@ int main(int argc, char *argv[])
 		/* Normalize all iteration data to 360 for HSV to RGB conversion */
 		//normalize (iterationBuffer, escapeBuffer, pixelCount, iterations);
 
-		/* Set rgb values to the buffer array */
+		/**
+		 * Set rgb values in the buffer array
+		 */
 		hsvToRGB (colorBuffer, iterationBuffer, escapeBuffer, pixelCount);
 
-		/* Call bitmap writer and write the data array to the file */
+		/**
+		 * Write the data array to the bitmap file
+		 */
 		writeBMP (colorBuffer, dataFile, bufferLength, pixelCount);
 
 		dataFile.close();
